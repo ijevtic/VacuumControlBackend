@@ -8,6 +8,9 @@ import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -17,7 +20,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    @Column
+    @Column(unique = true)
     @NotBlank(message = "Username is mandatory")
     private String username;
 
@@ -26,19 +29,15 @@ public class User {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
-    @Column(nullable = false)
-    @ColumnDefault("0")
-    private Integer loginCount = 0;
+    @Column(unique = true)
+    @NotBlank(message = "Email is mandatory")
+    private String email;
 
-    @Column(nullable = false)
-    @ColumnDefault("0")
-    private Integer balance = 0;
-
-    @Column(nullable = false)
-    @ColumnDefault("0")
-    private Integer salary = 0;
-
-//    @Column
-//    @Version
-//    private Integer version;
+    @ManyToMany
+    @JoinTable(
+            name = "user_permissions",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "permission_id")
+    )
+    private Set<Permission> permissions = new HashSet<>();
 }
