@@ -1,5 +1,6 @@
 package rs.raf.demo.mapper;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import rs.raf.demo.dto.UserDto;
 import rs.raf.demo.model.User;
@@ -10,6 +11,7 @@ import java.util.stream.Collectors;
 public class UserMapper {
     private PermissionMapper permissionMapper;
 
+    @Autowired
     public UserMapper(PermissionMapper permissionMapper) {
         this.permissionMapper = permissionMapper;
     }
