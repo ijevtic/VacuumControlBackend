@@ -12,7 +12,7 @@ import java.util.Set;
 @Setter
 public class Permission {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long permissionId;
 
     @Column

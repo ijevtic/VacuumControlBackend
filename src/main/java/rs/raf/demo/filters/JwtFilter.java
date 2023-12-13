@@ -1,11 +1,15 @@
 package rs.raf.demo.filters;
 
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.HandlerMapping;
+import rs.raf.demo.security.SkipJwtFilter;
 import rs.raf.demo.services.UserServiceImpl;
 import rs.raf.demo.utils.JwtUtil;
 
@@ -28,6 +32,11 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
+
+        if (isSkipJwtFilter(httpServletRequest)) {
+            filterChain.doFilter(httpServletRequest, httpServletResponse);
+            return;
+        }
 
         String authHeader = httpServletRequest.getHeader("Authorization");
         String jwt = null;
@@ -52,5 +61,13 @@ public class JwtFilter extends OncePerRequestFilter {
             }
         }
         filterChain.doFilter(httpServletRequest, httpServletResponse);
+    }
+
+    private boolean isSkipJwtFilter(HttpServletRequest request) {
+        HandlerMethod handlerMethod = (HandlerMethod) request.getAttribute(HandlerMapping.BEST_MATCHING_HANDLER_ATTRIBUTE);
+        if (handlerMethod != null) {
+            return AnnotationUtils.findAnnotation(handlerMethod.getMethod(), SkipJwtFilter.class) != null;
+        }
+        return false;
     }
 }

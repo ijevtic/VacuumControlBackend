@@ -10,18 +10,21 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import rs.raf.demo.dto.UserCredentialsDto;
 import rs.raf.demo.dto.UserDto;
 import rs.raf.demo.mapper.UserMapper;
 import rs.raf.demo.model.User;
 import rs.raf.demo.repositories.UserRepository;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserDetailsService, UserService {
 
     private PasswordEncoder passwordEncoder;
-
     private UserRepository userRepository;
     private UserMapper userMapper;
 
@@ -34,7 +37,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User myUser = this.findByUsername(username);
+        UserDto myUser = this.findByUsername(username);
         if(myUser == null) {
             throw new UsernameNotFoundException("User name "+username+" not found");
         }
@@ -42,12 +45,37 @@ public class UserServiceImpl implements UserDetailsService, UserService {
         return new org.springframework.security.core.userdetails.User(myUser.getUsername(), myUser.getPassword(), new ArrayList<>());
     }
 
-    public UserDto create(User user) {
+    public UserDto create(UserDto user) {
+        if(findByEmail(user.getEmail()) != null || findByUsername(user.getUsername()) != null) {
+            return null;
+        }
+
         user.setPassword(this.passwordEncoder.encode(user.getPassword()));
-        return userMapper.toDto(this.userRepository.save(user));
+
+        return userMapper.toDto(this.userRepository.save(userMapper.toEntity(user)));
     }
 
-    public User findByUsername(String username) {
-        return this.userRepository.findByUsername(username).orElse(null);
+    @Override
+    public List<UserDto> getAllUsers() {
+        return this.userRepository.findAll().stream().map(userMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public String login(UserCredentialsDto credentials) {
+        Optional<User> user = this.userRepository.findByEmail(credentials.getEmail());
+        if(user.isPresent()) {
+            if(this.passwordEncoder.matches(credentials.getPassword(), user.get().getPassword())) {
+                return "OK";
+            }
+        }
+        return null;
+    }
+
+    public UserDto findByUsername(String username) {
+        return this.userRepository.findByUsername(username).map(userMapper::toDto).orElse(null);
+    }
+
+    public UserDto findByEmail(String email) {
+        return this.userRepository.findByEmail(email).map(userMapper::toDto).orElse(null);
     }
 }

@@ -3,16 +3,20 @@ package rs.raf.demo.utils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
 public class JwtUtil {
-    private final String SECRET_KEY = "MY JWT SECRET";
+
+    @Value("${oauth.jwt.secret}")
+    private String SECRET_KEY;
 
     public Claims extractAllClaims(String token) {
         return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
@@ -20,6 +24,17 @@ public class JwtUtil {
 
     public String extractUsername(String token) {
         return extractAllClaims(token).getSubject();
+    }
+
+    public List<String> extractRoles(String token) {
+        Claims claims = extractAllClaims(token);
+        if(claims == null)
+            return null;
+        try {
+            return claims.get("roles", List.class);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public boolean isTokenExpired(String token){
