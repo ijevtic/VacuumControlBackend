@@ -1,13 +1,18 @@
 package rs.raf.demo.controllers;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import rs.raf.demo.requests.LoginRequest;
 import rs.raf.demo.responses.LoginResponse;
+import rs.raf.demo.security.SkipJwtFilter;
 import rs.raf.demo.services.UserServiceImpl;
 import rs.raf.demo.utils.JwtUtil;
+
+import javax.validation.Valid;
 
 @RestController
 @CrossOrigin
@@ -24,17 +29,15 @@ public class AuthController {
         this.jwtUtil = jwtUtil;
     }
 
-//    @PostMapping("/login")
-//    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest){
-//        try {
-//            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
-//        } catch (Exception   e){
-//            e.printStackTrace();
-//            return ResponseEntity.status(401).build();
-//        }
-//        this.userService.loggedIn(loginRequest.getUsername());
-//
-//        return ResponseEntity.ok(new LoginResponse(jwtUtil.generateToken(loginRequest.getUsername())));
-//    }
+//    @SkipJwtFilter
+    @PostMapping(value= "/login", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> login(@Valid @RequestBody LoginRequest credentials) {
+        System.out.printf("Login: %s\n", credentials.getEmail());
+        String token = this.userService.login(credentials);
+        if(token == null)
+            return new ResponseEntity<>("", HttpStatus.UNAUTHORIZED);
+
+        return ResponseEntity.status(HttpStatus.OK).body(token);
+    }
 
 }

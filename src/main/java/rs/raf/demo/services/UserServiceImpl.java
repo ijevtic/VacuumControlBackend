@@ -1,16 +1,12 @@
 package rs.raf.demo.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.scheduling.TaskScheduler;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import rs.raf.demo.dto.UserCredentialsDto;
+import rs.raf.demo.requests.LoginRequest;
 import rs.raf.demo.dto.UserDto;
 import rs.raf.demo.mapper.UserMapper;
 import rs.raf.demo.model.User;
@@ -61,7 +57,7 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     }
 
     @Override
-    public String login(UserCredentialsDto credentials) {
+    public String login(LoginRequest credentials) {
         Optional<User> user = this.userRepository.findByEmail(credentials.getEmail());
         if(user.isPresent()) {
             if(this.passwordEncoder.matches(credentials.getPassword(), user.get().getPassword())) {

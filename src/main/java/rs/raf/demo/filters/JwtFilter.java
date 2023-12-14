@@ -32,6 +32,15 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
+        String requestURI = httpServletRequest.getRequestURI();
+        System.out.println(requestURI);
+        System.out.println("jwt check");
+        // Check if the request URI matches the paths where you want to skip token validation
+//        if (requestURI.equals("/users/login")) {
+//            // If the condition is met, proceed with the filter chain without token validation
+//            filterChain.doFilter(httpServletRequest, httpServletResponse);
+//            return;
+//        }
 
         if (isSkipJwtFilter(httpServletRequest)) {
             filterChain.doFilter(httpServletRequest, httpServletResponse);
@@ -65,6 +74,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private boolean isSkipJwtFilter(HttpServletRequest request) {
         HandlerMethod handlerMethod = (HandlerMethod) request.getAttribute(HandlerMapping.BEST_MATCHING_HANDLER_ATTRIBUTE);
+        System.out.println(request.getServletPath());
         if (handlerMethod != null) {
             return AnnotationUtils.findAnnotation(handlerMethod.getMethod(), SkipJwtFilter.class) != null;
         }

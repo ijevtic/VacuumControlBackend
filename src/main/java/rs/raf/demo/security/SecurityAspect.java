@@ -1,15 +1,13 @@
 package rs.raf.demo.security;
 
-import io.jsonwebtoken.Claims;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.token.TokenService;
+import org.springframework.security.core.context.SecurityContextHolder;
 import rs.raf.demo.utils.JwtUtil;
 
 import java.lang.reflect.Method;
@@ -27,6 +25,7 @@ public class SecurityAspect {
 
     @Around("@annotation(rs.raf.demo.security.CheckSecurity)")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
+        System.out.println("security aspect");
         //Get method signature
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         Method method = methodSignature.getMethod();
