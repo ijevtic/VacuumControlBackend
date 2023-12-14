@@ -1,12 +1,11 @@
 package rs.raf.demo.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import rs.raf.demo.dto.UserCredentialsDto;
+import rs.raf.demo.requests.LoginRequest;
 import rs.raf.demo.dto.UserDto;
 import rs.raf.demo.model.User;
 import rs.raf.demo.security.CheckSecurity;
@@ -16,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -41,13 +41,15 @@ public class UserController {
 
     @CheckSecurity(role = "Read")
     @GetMapping(value= "/get", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDto> readAllUsers(@RequestParam("username") String username) {
-        return new ResponseEntity<>(this.userService.findByUsername(username), HttpStatus.OK);
+    public ResponseEntity<List<UserDto>> readAllUsers() {
+        System.out.println("read method controller");
+        return new ResponseEntity<>(this.userService.getAllUsers(), HttpStatus.OK);
     }
 
     @SkipJwtFilter
     @PostMapping(value= "/login", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> login(@Valid @RequestBody UserCredentialsDto credentials) {
+    public ResponseEntity<String> login(@Valid @RequestBody LoginRequest credentials) {
+        System.out.printf("Login: %s\n", credentials.getEmail());
         String token = this.userService.login(credentials);
         if(token == null)
             return new ResponseEntity<>("", HttpStatus.UNAUTHORIZED);
