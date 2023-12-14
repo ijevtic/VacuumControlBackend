@@ -1,0 +1,8 @@
+<aspectj>
+    <aspects>
+        <aspect name="rs.raf.demo.utils.AspectProba" />
+        <aspect name="rs.raf.demo.security.SecurityAspect" />
+    </aspects>
+    <weaver options="-verbose -showWeaveInfo -Xset:weaveJavaxPackages=true">
+    </weaver>
+</aspectj>
