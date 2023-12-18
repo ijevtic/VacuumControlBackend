@@ -20,6 +20,8 @@ public class UserMapper {
         UserDto dto = new UserDto();
         dto.setUsername(user.getUsername());
         dto.setPassword(user.getPassword());
+        dto.setFirstName(user.getFirstName());
+        dto.setLastName(user.getLastName());
         dto.setEmail(user.getEmail());
         dto.setPermissions(user.getPermissions().stream().map(permissionMapper::toDto).collect(Collectors.toSet()));
         return dto;
@@ -29,6 +31,8 @@ public class UserMapper {
         User user = new User();
         user.setUsername(dto.getUsername());
         user.setPassword(dto.getPassword());
+        user.setFirstName(dto.getFirstName());
+        user.setLastName(dto.getLastName());
         user.setEmail(dto.getEmail());
         user.setPermissions(dto.getPermissions().stream().map(permissionMapper::toEntity).collect(Collectors.toSet()));
         return user;

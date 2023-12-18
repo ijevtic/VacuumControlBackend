@@ -4,11 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import rs.raf.demo.requests.LoginRequest;
-import rs.raf.demo.responses.LoginResponse;
-import rs.raf.demo.security.SkipJwtFilter;
 import rs.raf.demo.services.UserServiceImpl;
 import rs.raf.demo.utils.JwtUtil;
 

@@ -3,15 +3,15 @@ package rs.raf.demo.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import rs.raf.demo.requests.LoginRequest;
 import rs.raf.demo.dto.UserDto;
-import rs.raf.demo.model.User;
+import rs.raf.demo.requests.UpdateUserRequest;
 import rs.raf.demo.security.CheckSecurity;
 import rs.raf.demo.security.SkipJwtFilter;
 import rs.raf.demo.services.UserService;
 import org.springframework.http.ResponseEntity;
+import rs.raf.demo.utils.PermissionType;
 
 
 import javax.validation.Valid;
@@ -30,13 +30,22 @@ public class UserController {
     }
 
     @CheckSecurity(role = "Create")
-    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDto> create(@Valid @RequestBody UserDto user) {
+    @PostMapping(value= "/create-user", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto user) {
         UserDto createdUser = this.userService.create(user);
         if(createdUser == null)
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
+    }
+
+    @CheckSecurity(role = "Delete")
+    @DeleteMapping(value = "/users/delete/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UserDto> deleteUser(@PathVariable Long userId) {
+        if (!this.userService.delete(userId)) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @CheckSecurity(role = "Read")
@@ -46,8 +55,17 @@ public class UserController {
         return new ResponseEntity<>(this.userService.getAllUsers(), HttpStatus.OK);
     }
 
+    @CheckSecurity(role = "Update")
+    @DeleteMapping(value = "/users/update", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UpdateUserRequest user) {
+        if (!this.userService.update(user)) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
     @SkipJwtFilter
-    @PostMapping(value= "/login", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> login(@Valid @RequestBody LoginRequest credentials) {
         System.out.printf("Login: %s\n", credentials.getEmail());
         String token = this.userService.login(credentials);
@@ -55,25 +73,5 @@ public class UserController {
             return new ResponseEntity<>("", HttpStatus.UNAUTHORIZED);
 
         return new ResponseEntity<>(token, HttpStatus.OK);
-    }
-
-
-
-//    @GetMapping
-//    public Page<User> all(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size) {
-//        return this.userService.paginate(page, size);
-//    }
-
-//    @GetMapping(value = "/me", produces = MediaType.APPLICATION_JSON_VALUE)
-//    public User me() {
-//        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-//        return this.userService.findByUsername(username);
-//    }
-
-    @PostMapping(value = "/hire", produces = MediaType.APPLICATION_JSON_VALUE)
-    public User hire(@RequestParam("salary") Integer salary) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-//        return this.userService.hire(username, salary);
-        return null;
     }
 }

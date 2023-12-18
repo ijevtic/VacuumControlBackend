@@ -8,4 +8,3 @@ import java.util.List;
 public interface AuthService {
     public String login(LoginRequest credentials);
 }
-

@@ -33,6 +33,12 @@ public class User {
     @NotBlank(message = "Email is mandatory")
     private String email;
 
+    @Column
+    private String firstName;
+
+    @Column
+    private String lastName;
+
     @ManyToMany
     @JoinTable(
             name = "user_permissions",
