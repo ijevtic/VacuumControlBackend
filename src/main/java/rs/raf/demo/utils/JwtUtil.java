@@ -18,12 +18,22 @@ public class JwtUtil {
     @Value("${oauth.jwt.secret}")
     private String SECRET_KEY;
 
-    public Claims extractAllClaims(String token) {
-        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+    public Claims extractAllClaims(String token){
+        Claims claims = null;
+        try {
+            claims = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+        }
+        catch (Exception e) {
+            return null;
+        }
+        return claims;
     }
 
     public String extractUsername(String token) {
-        return extractAllClaims(token).getSubject();
+        Claims claims = extractAllClaims(token);
+        if(claims == null)
+            return null;
+        return claims.getSubject();
     }
 
     public List<String> extractRoles(String token) {
@@ -38,7 +48,10 @@ public class JwtUtil {
     }
 
     public boolean isTokenExpired(String token){
-        return extractAllClaims(token).getExpiration().before(new Date());
+        Claims claims = extractAllClaims(token);
+        if(claims == null)
+            return true;
+        return claims.getExpiration().before(new Date());
     }
 
     public String generateToken(String username){
