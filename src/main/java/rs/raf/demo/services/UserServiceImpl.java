@@ -13,6 +13,7 @@ import rs.raf.demo.mapper.UserMapper;
 import rs.raf.demo.model.User;
 import rs.raf.demo.repositories.UserRepository;
 import rs.raf.demo.requests.UpdateUserRequest;
+import rs.raf.demo.utils.JwtUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,13 +27,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private UserRepository userRepository;
     private UserMapper userMapper;
     private PermissionMapper permissionMapper;
+    private JwtUtil jwtUtil;
 
     @Autowired
-    public UserServiceImpl(PasswordEncoder passwordEncoder, UserRepository userRepository, UserMapper userMapper, PermissionMapper permissionMapper) {
+    public UserServiceImpl(PasswordEncoder passwordEncoder, UserRepository userRepository, UserMapper userMapper,
+                           PermissionMapper permissionMapper, JwtUtil jwtUtil) {
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.permissionMapper = permissionMapper;
+        this.jwtUtil = jwtUtil;
     }
 
     public UserDto create(UserDto user) {
@@ -52,13 +56,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public String login(LoginRequest credentials) {
-        Optional<User> user = this.userRepository.findByEmail(credentials.getEmail());
-        if(user.isPresent()) {
-            if(this.passwordEncoder.matches(credentials.getPassword(), user.get().getPassword())) {
-                return "OK";
-            }
-        }
-        return null;
+        User user = this.userRepository.findByEmail(credentials.getEmail()).orElse(null);
+        if(user == null) return null;
+        if(!this.passwordEncoder.matches(credentials.getPassword(), user.getPassword())) return null;
+
+        return jwtUtil.generateToken(user);
     }
 
     @Override

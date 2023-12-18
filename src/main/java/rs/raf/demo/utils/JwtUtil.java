@@ -6,6 +6,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import rs.raf.demo.model.User;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -54,17 +55,21 @@ public class JwtUtil {
         return claims.getExpiration().before(new Date());
     }
 
-    public String generateToken(String username){
-        Map<String, Object> claims = new HashMap<>();
-        return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(username)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
-                .signWith(SignatureAlgorithm.HS512, SECRET_KEY).compact();
-    }
-
     public boolean validateToken(String token, UserDetails user) {
         return (user.getUsername().equals(extractUsername(token)) && !isTokenExpired(token));
+    }
+
+    public String generateToken(User user) {
+        //expiration 1 year
+        long jwtExpirationMs = 365L * 24 * 60 * 60 * 1000;
+        Date expirationDate = new Date(System.currentTimeMillis() + jwtExpirationMs);
+
+        return Jwts.builder()
+                .setSubject(user.getUsername())
+                .claim("roles", user.getPermissions())  // assuming roles is a collection of user roles
+                .setIssuedAt(new Date())
+                .setExpiration(expirationDate)
+                .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
+                .compact();
     }
 }

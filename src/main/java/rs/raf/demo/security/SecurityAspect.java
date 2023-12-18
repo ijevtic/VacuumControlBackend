@@ -25,7 +25,6 @@ public class SecurityAspect {
 
     @Around("@annotation(rs.raf.demo.security.CheckSecurity)")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
-        System.out.println("security aspect");
         //Get method signature
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         Method method = methodSignature.getMethod();
