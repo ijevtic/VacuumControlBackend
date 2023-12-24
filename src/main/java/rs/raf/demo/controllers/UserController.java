@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import rs.raf.demo.requests.AddUserRequest;
 import rs.raf.demo.requests.LoginRequest;
 import rs.raf.demo.dto.UserDto;
 import rs.raf.demo.requests.UpdateUserRequest;
@@ -31,7 +32,7 @@ public class UserController {
 
     @CheckSecurity(role = "Create")
     @PostMapping(value= "/create-user", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto user) {
+    public ResponseEntity<UserDto> createUser(@Valid @RequestBody AddUserRequest user) {
         UserDto createdUser = this.userService.create(user);
         if(createdUser == null)
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -40,9 +41,9 @@ public class UserController {
     }
 
     @CheckSecurity(role = "Delete")
-    @DeleteMapping(value = "/users/delete/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDto> deleteUser(@PathVariable Long userId) {
-        if (!this.userService.delete(userId)) {
+    @DeleteMapping(value = "/delete/{email}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UserDto> deleteUser(@PathVariable String email) {
+        if (!this.userService.delete(email)) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(HttpStatus.OK);

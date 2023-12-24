@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import rs.raf.demo.dto.UserSimpleDto;
 import rs.raf.demo.mapper.PermissionMapper;
+import rs.raf.demo.requests.AddUserRequest;
 import rs.raf.demo.requests.LoginRequest;
 import rs.raf.demo.dto.UserDto;
 import rs.raf.demo.mapper.UserMapper;
@@ -40,10 +41,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         this.jwtUtil = jwtUtil;
     }
 
-    public UserDto create(UserDto user) {
+    public UserDto create(AddUserRequest user) {
+        System.out.println("create method service");
         if(findByEmail(user.getEmail()) != null || findByUsername(user.getUsername()) != null) {
             return null;
         }
+
+        System.out.println(user.getPermissions());
 
         user.setPassword(this.passwordEncoder.encode(user.getPassword()));
 
@@ -75,6 +79,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
 
         this.userRepository.deleteByUserId(userId);
+        return true;
+    }
+
+    public boolean delete(String email) {
+        User user = this.userRepository.findByEmail(email).orElse(null);
+        if(user == null) {
+            return false;
+        }
+
+        this.userRepository.deleteByUserId(user.getUserId());
         return true;
     }
 
