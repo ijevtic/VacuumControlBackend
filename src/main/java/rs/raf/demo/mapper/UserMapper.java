@@ -3,8 +3,10 @@ package rs.raf.demo.mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import rs.raf.demo.dto.UserDto;
+import rs.raf.demo.dto.UserSimpleDto;
 import rs.raf.demo.model.User;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
@@ -24,6 +26,16 @@ public class UserMapper {
         dto.setLastName(user.getLastName());
         dto.setEmail(user.getEmail());
         dto.setPermissions(user.getPermissions().stream().map(permissionMapper::toDto).collect(Collectors.toSet()));
+        return dto;
+    }
+
+    public UserSimpleDto toSimpleDto(User user) {
+        UserSimpleDto dto = new UserSimpleDto();
+        dto.setUsername(user.getUsername());
+        dto.setFirstName(user.getFirstName());
+        dto.setLastName(user.getLastName());
+        dto.setEmail(user.getEmail());
+        dto.setPermissions(user.getPermissions().stream().map(permissionMapper::toString).collect(Collectors.toList()));
         return dto;
     }
 

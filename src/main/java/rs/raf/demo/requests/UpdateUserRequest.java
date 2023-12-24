@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import rs.raf.demo.dto.PermissionDto;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -17,5 +19,5 @@ public class UpdateUserRequest {
     private String email;
     private String firstName;
     private String lastName;
-    private Set<PermissionDto> permissions = new HashSet<>();
+    private List<String> permissions = new ArrayList<>();
 }

@@ -11,10 +11,10 @@ import java.util.Map;
 @Component
 public class PermissionMapper {
     Map<Long, PermissionType> numberToType = Map.of(
-            0L, PermissionType.CREATE,
-            1L, PermissionType.READ,
-            2L, PermissionType.UPDATE,
-            3L, PermissionType.DELETE
+            1L, PermissionType.CREATE,
+            2L, PermissionType.READ,
+            3L, PermissionType.UPDATE,
+            4L, PermissionType.DELETE
     );
 
     Map<PermissionType, Long> typeToNumber = new HashMap<>();
@@ -25,12 +25,31 @@ public class PermissionMapper {
         }
     }
 
+    Map<String, Long> nameToNumber = Map.of(
+            "Create", 1L,
+            "Read", 2L,
+            "Update", 3L,
+            "Delete", 4L
+    );
+
     public PermissionDto toDto(Permission permission) {
         PermissionDto dto = new PermissionDto();
         dto.setName(permission.getName());
         dto.setDescription(permission.getDescription());
         dto.setType(numberToType.get(permission.getPermissionId()));
         return dto;
+    }
+
+    public String toString(Permission permission) {
+        return permission.getName();
+    }
+
+    public Permission toEntity(String permission) {
+        Permission p = new Permission();
+        p.setName(permission);
+        p.setPermissionId(nameToNumber.get(permission));
+        System.out.println(p.getPermissionId());
+        return p;
     }
 
     public Permission toEntity(PermissionDto dto) {

@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import rs.raf.demo.dto.UserSimpleDto;
 import rs.raf.demo.mapper.PermissionMapper;
 import rs.raf.demo.requests.LoginRequest;
 import rs.raf.demo.dto.UserDto;
@@ -50,8 +51,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public List<UserDto> getAllUsers() {
-        return this.userRepository.findAll().stream().map(userMapper::toDto).collect(Collectors.toList());
+    public List<UserSimpleDto> getAllUsers() {
+        return this.userRepository.findAll().stream().map(userMapper::toSimpleDto).collect(Collectors.toList());
     }
 
     @Override
@@ -79,7 +80,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public boolean update(UpdateUserRequest user) {
-        User userToUpdate = this.userRepository.findByUsername(user.getUsername()).orElse(null);
+        User userToUpdate = this.userRepository.findByEmail(user.getEmail()).orElse(null);
+
 
         if(userToUpdate == null) {
             return false;
@@ -89,17 +91,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             userToUpdate.setPermissions(user.getPermissions().stream().map(permissionMapper::toEntity).collect(Collectors.toSet()));
         }
 
-        if(user.getPassword() != null) {
+        if(user.getPassword() != null && !user.getPassword().isEmpty()) {
             userToUpdate.setPassword(this.passwordEncoder.encode(user.getPassword()));
         }
 
-        if(user.getFirstName() != null) {
+        if(user.getFirstName() != null && !user.getFirstName().isEmpty()) {
             userToUpdate.setFirstName(user.getFirstName());
         }
 
-        if(user.getLastName() != null)
+        if(user.getLastName() != null && !user.getLastName().isEmpty())
             userToUpdate.setLastName(user.getLastName());
-
+        System.out.println(userToUpdate.getPermissions().iterator().next().getPermissionId());
+        System.out.println("aaaa");
         this.userRepository.save(userToUpdate);
         return true;
     }

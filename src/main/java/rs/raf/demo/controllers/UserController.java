@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import rs.raf.demo.requests.LoginRequest;
 import rs.raf.demo.dto.UserDto;
 import rs.raf.demo.requests.UpdateUserRequest;
+import rs.raf.demo.responses.UsersResponse;
 import rs.raf.demo.security.CheckSecurity;
 import rs.raf.demo.security.SkipJwtFilter;
 import rs.raf.demo.services.UserService;
@@ -49,13 +50,13 @@ public class UserController {
 
     @CheckSecurity(role = "Read")
     @GetMapping(value= "/get", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<UserDto>> readAllUsers() {
+    public ResponseEntity<UsersResponse> readAllUsers() {
         System.out.println("read method controller");
-        return new ResponseEntity<>(this.userService.getAllUsers(), HttpStatus.OK);
+        return new ResponseEntity<>(new UsersResponse(this.userService.getAllUsers()), HttpStatus.OK);
     }
 
     @CheckSecurity(role = "Update")
-    @DeleteMapping(value = "/users/update", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/update", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UpdateUserRequest user) {
         if (!this.userService.update(user)) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

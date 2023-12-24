@@ -76,7 +76,7 @@ public class JwtUtil {
 
         return Jwts.builder()
                 .setSubject(user.getUsername())
-                .claim("roles", user.getPermissions().stream().map(permissionMapper::toDto).toList())
+                .claim("roles", user.getPermissions().stream().map(permissionMapper::toString).toList())
                 .setIssuedAt(new Date())
                 .setExpiration(expirationDate)
                 .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
