@@ -11,7 +11,6 @@ import rs.raf.demo.security.CheckSecurity;
 import rs.raf.demo.security.SkipJwtFilter;
 import rs.raf.demo.services.UserService;
 import org.springframework.http.ResponseEntity;
-import rs.raf.demo.utils.PermissionType;
 
 
 import javax.validation.Valid;
@@ -62,16 +61,5 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @SkipJwtFilter
-    @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> login(@Valid @RequestBody LoginRequest credentials) {
-        System.out.printf("Login: %s\n", credentials.getEmail());
-        String token = this.userService.login(credentials);
-        if(token == null)
-            return new ResponseEntity<>("", HttpStatus.UNAUTHORIZED);
-
-        return new ResponseEntity<>(token, HttpStatus.OK);
     }
 }

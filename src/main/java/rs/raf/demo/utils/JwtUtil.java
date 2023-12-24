@@ -6,6 +6,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import rs.raf.demo.mapper.PermissionMapper;
 import rs.raf.demo.model.User;
 
 import java.util.Date;
@@ -18,6 +19,12 @@ public class JwtUtil {
 
     @Value("${oauth.jwt.secret}")
     private String SECRET_KEY;
+
+    private PermissionMapper permissionMapper;
+
+    public JwtUtil(PermissionMapper permissionMapper) {
+        this.permissionMapper = permissionMapper;
+    }
 
     public Claims extractAllClaims(String token){
         Claims claims = null;
@@ -61,12 +68,15 @@ public class JwtUtil {
 
     public String generateToken(User user) {
         //expiration 1 year
+        System.out.println("Generating token for user: " + user.getUsername());
+
         long jwtExpirationMs = 365L * 24 * 60 * 60 * 1000;
         Date expirationDate = new Date(System.currentTimeMillis() + jwtExpirationMs);
 
+
         return Jwts.builder()
                 .setSubject(user.getUsername())
-                .claim("roles", user.getPermissions())  // assuming roles is a collection of user roles
+                .claim("roles", user.getPermissions().stream().map(permissionMapper::toDto).toList())
                 .setIssuedAt(new Date())
                 .setExpiration(expirationDate)
                 .signWith(SignatureAlgorithm.HS512, SECRET_KEY)

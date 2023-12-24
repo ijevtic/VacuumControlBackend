@@ -60,6 +60,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         if(user == null) return null;
         if(!this.passwordEncoder.matches(credentials.getPassword(), user.getPassword())) return null;
 
+        System.out.println("User found: " + user.getUsername());
+
+        System.out.println(user.getPermissions());
+
         return jwtUtil.generateToken(user);
     }
 

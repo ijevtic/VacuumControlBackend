@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 import rs.raf.demo.requests.LoginRequest;
+import rs.raf.demo.responses.JwtResponse;
 import rs.raf.demo.services.UserServiceImpl;
 import rs.raf.demo.utils.JwtUtil;
 
@@ -28,13 +29,13 @@ public class AuthController {
 
 //    @SkipJwtFilter
     @PostMapping(value= "/login", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> login(@Valid @RequestBody LoginRequest credentials) {
+    public ResponseEntity<JwtResponse> login(@Valid @RequestBody LoginRequest credentials) {
         System.out.printf("Login: %s\n", credentials.getEmail());
         String token = this.userService.login(credentials);
         if(token == null)
-            return new ResponseEntity<>("", HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
 
-        return ResponseEntity.status(HttpStatus.OK).body(token);
+        return ResponseEntity.ok(new JwtResponse(token));
     }
 
 }

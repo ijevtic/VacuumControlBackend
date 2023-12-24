@@ -39,7 +39,7 @@ public class User {
     @Column
     private String lastName;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_permissions",
             joinColumns = @JoinColumn(name = "user_id"),
