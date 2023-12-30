@@ -4,5 +4,11 @@ public enum PermissionType {
     CREATE,
     READ,
     UPDATE,
-    DELETE
+    DELETE,
+    SEARCHV,
+    STARTV,
+    STOPV,
+    DISCHARGEV,
+    ADDV,
+    REMOVEV
 }

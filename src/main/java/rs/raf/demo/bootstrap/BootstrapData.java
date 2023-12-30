@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import rs.raf.demo.model.*;
 import rs.raf.demo.repositories.*;
+import rs.raf.demo.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,6 @@ public class BootstrapData implements CommandLineRunner {
 
     private final UserRepository userRepository;
     private final PermissionRepository permissionRepository;
-
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -54,35 +54,20 @@ public class BootstrapData implements CommandLineRunner {
         user3.setFirstName("Name3");
         user3.setLastName("LastName3");
 
-        Permission p1 = new Permission();
-        p1.setName("Create");
-        p1.setDescription("Create permission");
-        p1.setPermissionId(1L);
+        Permission [] ps = new Permission[10];
 
-        Permission p2 = new Permission();
-        p2.setName("Read");
-        p2.setDescription("Read permission");
-        p2.setPermissionId(2L);
+        for(int i = 0; i < 10; i++) {
+            ps[i] = new Permission();
+            ps[i].setName(Constants.permissions[i].getFirst());
+            ps[i].setDescription(Constants.permissions[i].getFirst() + " description");
+            ps[i].setPermissionId(Constants.permissions[i].getSecond());
+            this.permissionRepository.save(ps[i]);
+        }
 
-        Permission p3 = new Permission();
-        p3.setName("Update");
-        p3.setDescription("Update permission");
-        p3.setPermissionId(3L);
-
-        Permission p4 = new Permission();
-        p4.setName("Delete");
-        p4.setDescription("Delete permission");
-        p4.setPermissionId(4L);
-
-        this.permissionRepository.save(p1);
-        this.permissionRepository.save(p2);
-        this.permissionRepository.save(p3);
-        this.permissionRepository.save(p4);
-
-        user1.setPermissions(Set.of(p1, p2, p3, p4));
+        user1.setPermissions(Set.of(ps[0], ps[1], ps[2], ps[3], ps[4], ps[5], ps[6], ps[7], ps[8], ps[9]));
         this.userRepository.save(user1);
 
-        user2.setPermissions(Set.of(p1, p2, p3));
+        user2.setPermissions(Set.of(ps[0], ps[1], ps[2]));
         this.userRepository.save(user2);
 
 //        user3.setPermissions(Set.of(p1, p2));

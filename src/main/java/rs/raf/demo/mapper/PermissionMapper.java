@@ -3,34 +3,16 @@ package rs.raf.demo.mapper;
 import org.springframework.stereotype.Component;
 import rs.raf.demo.dto.PermissionDto;
 import rs.raf.demo.model.Permission;
+import rs.raf.demo.utils.Constants;
 import rs.raf.demo.utils.PermissionType;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static rs.raf.demo.utils.Constants.*;
+
 @Component
 public class PermissionMapper {
-    Map<Long, PermissionType> numberToType = Map.of(
-            1L, PermissionType.CREATE,
-            2L, PermissionType.READ,
-            3L, PermissionType.UPDATE,
-            4L, PermissionType.DELETE
-    );
-
-    Map<PermissionType, Long> typeToNumber = new HashMap<>();
-
-    {
-        for (Map.Entry<Long, PermissionType> entry : numberToType.entrySet()) {
-            typeToNumber.put(entry.getValue(), entry.getKey());
-        }
-    }
-
-    Map<String, Long> nameToNumber = Map.of(
-            "Create", 1L,
-            "Read", 2L,
-            "Update", 3L,
-            "Delete", 4L
-    );
 
     public PermissionDto toDto(Permission permission) {
         PermissionDto dto = new PermissionDto();
