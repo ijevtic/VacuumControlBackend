@@ -11,10 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import rs.raf.demo.filters.JwtFilter;
-import rs.raf.demo.services.AuthService;
-import rs.raf.demo.services.AuthServiceImpl;
-import rs.raf.demo.services.UserService;
-import rs.raf.demo.services.UserServiceImpl;
+import rs.raf.demo.services.*;
 
 @EnableWebSecurity
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -22,12 +19,14 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserServiceImpl userService;
     private final AuthServiceImpl authService;
     private final JwtFilter jwtFilter;
+    private final VacuumServiceImpl vacuumService;
 
     @Autowired
-    public SpringSecurityConfig(UserServiceImpl userService, JwtFilter jwtFilter, AuthServiceImpl authService) {
+    public SpringSecurityConfig(UserServiceImpl userService, JwtFilter jwtFilter, AuthServiceImpl authService, VacuumServiceImpl vacuumService) {
         this.userService = userService;
         this.jwtFilter = jwtFilter;
         this.authService = authService;
+        this.vacuumService = vacuumService;
     }
 
     @Override
