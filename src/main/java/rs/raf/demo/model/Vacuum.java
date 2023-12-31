@@ -2,7 +2,6 @@ package rs.raf.demo.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.validator.constraints.UniqueElements;
 import rs.raf.demo.utils.VacuumStatus;
 
 import javax.persistence.*;
@@ -26,6 +25,10 @@ public class Vacuum {
 
     private Long dateCreated;
 
+    @Version
+    private Integer version = 0;
+
+    private Integer lastDischarge = 0;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

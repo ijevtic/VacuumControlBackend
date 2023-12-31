@@ -17,4 +17,10 @@ public interface VacuumRepository extends JpaRepository<Vacuum, Long> {
     @Query("select v from Vacuum v where v.user = :username")
 //    @Transactional
     public Optional<List<Vacuum>> findByUsername(@Param("username") String username);
+
+    public Optional<Vacuum> findByName(String name);
+
+    Optional<Vacuum> getReferenceByVacuumId(Long id);
+
+    Optional<Vacuum> getReferenceByName(String name);
 }
