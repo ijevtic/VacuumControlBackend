@@ -16,8 +16,8 @@ public class Constants {
     public static final String ADDV = "AddV";
     public static final String REMOVEV = "RemoveV";
 
-    public static final String ON_STATUS = "On";
-    public static final String OFF_STATUS = "Off";
+    public static final String RUNING_STATUS = "Running";
+    public static final String STOPPED_STATUS = "Stopped";
     public static final String DISCHARGING_STATUS = "Discharging";
     public static Tuple<String, Long, PermissionType>[] permissions =
             new Tuple[]{
@@ -46,7 +46,7 @@ public class Constants {
             typeToNumber.put(entry.getValue(), entry.getKey());
         }
         for (int i = 0; i < Constants.permissions.length; i++) {
-            nameToNumber.put(Constants.permissions[i].getFirst(), Constants.permissions[i].getSecond());
+            nameToNumber.put(Constants.permissions[i]. getFirst(), Constants.permissions[i].getSecond());
         }
         for (int i = 0; i < Constants.permissions.length; i++) {
             typeToName.put(Constants.permissions[i].getThird(), Constants.permissions[i].getFirst());
@@ -54,8 +54,8 @@ public class Constants {
     }
 
     public static Map<VacuumStatus, String> statusToName = Map.of(
-            VacuumStatus.ON, ON_STATUS,
-            VacuumStatus.OFF, OFF_STATUS,
+            VacuumStatus.STOPPED, STOPPED_STATUS,
+            VacuumStatus.RUNNING, RUNING_STATUS,
             VacuumStatus.DISCHARGING, DISCHARGING_STATUS
     );
 }
