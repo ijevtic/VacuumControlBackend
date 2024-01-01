@@ -14,7 +14,7 @@ import java.util.Optional;
 public interface VacuumRepository extends JpaRepository<Vacuum, Long> {
 //    public Optional<Vacuum> findByAddedBy(Long id);
 
-    @Query("select v from Vacuum v where v.user = :username")
+    @Query("select v from Vacuum v where v.user.username = :username")
 //    @Transactional
     public Optional<List<Vacuum>> findByUsername(@Param("username") String username);
 

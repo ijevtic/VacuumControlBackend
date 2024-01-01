@@ -15,10 +15,10 @@ public class Constants {
     public static final String DISCHARGEV = "DischargeV";
     public static final String ADDV = "AddV";
     public static final String REMOVEV = "RemoveV";
-
     public static final String RUNING_STATUS = "Running";
     public static final String STOPPED_STATUS = "Stopped";
     public static final String DISCHARGING_STATUS = "Discharging";
+    public static final Integer waitTime = 1000;
     public static Tuple<String, Long, PermissionType>[] permissions =
             new Tuple[]{
                     new Tuple<>(CREATE, 1L, PermissionType.CREATE),
@@ -57,5 +57,6 @@ public class Constants {
             VacuumStatus.STOPPED, STOPPED_STATUS,
             VacuumStatus.RUNNING, RUNING_STATUS,
             VacuumStatus.DISCHARGING, DISCHARGING_STATUS
+
     );
 }

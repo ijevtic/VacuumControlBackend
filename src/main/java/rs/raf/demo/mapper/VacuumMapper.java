@@ -25,6 +25,7 @@ public class VacuumMapper {
         vacuum.setActive(request.getActive());
         vacuum.setStatus(VacuumStatus.STOPPED);
         vacuum.setDateCreated(System.currentTimeMillis() / 1000L);
+        vacuum.setLocked(false);
         vacuum.setUser(user);
         return vacuum;
     }

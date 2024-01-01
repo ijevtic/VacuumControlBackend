@@ -10,8 +10,8 @@ public interface VacuumService {
     List<VacuumDto> search(SearchRequest request);
     boolean add(AddVacuumRequest request);
     boolean remove(String vacuumName);
-    boolean discharge(String vacuumName);
-    public boolean startVacuum(String vacuumName);
-    public boolean stopVacuum(String vacuumName);
+    boolean dischargeVacuum(String vacuumName, boolean scheduled, boolean chainCall);
+    public boolean startVacuum(String vacuumName, boolean scheduled);
+    public boolean stopVacuum(String vacuumName, boolean scheduled);
 
 }

@@ -71,7 +71,7 @@ public class VacuumController {
     @CheckSecurity(role = DISCHARGEV)
     @PostMapping(value = "/discharge/{vacuumName}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<VacuumDto> discharge(@PathVariable String vacuumName) {
-        if (!this.vacuumService.discharge(vacuumName)) {
+        if (!this.vacuumService.dischargeVacuum(vacuumName, false, false)) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(HttpStatus.OK);
@@ -80,7 +80,7 @@ public class VacuumController {
     @CheckSecurity(role = STARTV)
     @PostMapping(value = "/start/{vacuumName}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<VacuumDto> startVacuum(@PathVariable String vacuumName) {
-        if (!this.vacuumService.startVacuum(vacuumName)) {
+        if (!this.vacuumService.startVacuum(vacuumName, false)) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(HttpStatus.OK);
@@ -89,7 +89,7 @@ public class VacuumController {
     @CheckSecurity(role = STOPV)
     @PostMapping(value = "/stop/{vacuumName}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<VacuumDto> stopVacuum(@PathVariable String vacuumName) {
-        if (!this.vacuumService.stopVacuum(vacuumName)) {
+        if (!this.vacuumService.stopVacuum(vacuumName, false)) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(HttpStatus.OK);
@@ -101,7 +101,7 @@ public class VacuumController {
         CronTrigger cronTrigger = getCronTrigger(request);
 
         this.taskScheduler.schedule(() -> {
-            this.vacuumService.discharge(request.getVacuumName());
+            this.vacuumService.dischargeVacuum(request.getVacuumName(), true, false);
         }, cronTrigger);
 
         return new ResponseEntity<>(HttpStatus.OK);
@@ -113,7 +113,7 @@ public class VacuumController {
         CronTrigger cronTrigger = getCronTrigger(request);
 
         this.taskScheduler.schedule(() -> {
-            this.vacuumService.startVacuum(request.getVacuumName());
+            this.vacuumService.startVacuum(request.getVacuumName(), true);
         }, cronTrigger);
 
         return new ResponseEntity<>(HttpStatus.OK);
@@ -125,7 +125,7 @@ public class VacuumController {
         CronTrigger cronTrigger = getCronTrigger(request);
 
         this.taskScheduler.schedule(() -> {
-            this.vacuumService.stopVacuum(request.getVacuumName());
+            this.vacuumService.stopVacuum(request.getVacuumName(), true);
         }, cronTrigger);
 
         return new ResponseEntity<>(HttpStatus.OK);

@@ -25,6 +25,8 @@ public class Vacuum {
 
     private Long dateCreated;
 
+    private Boolean locked;
+
     @Version
     private Integer version = 0;
 
