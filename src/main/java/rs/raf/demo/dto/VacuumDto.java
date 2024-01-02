@@ -6,6 +6,5 @@ import lombok.Data;
 public class VacuumDto {
     private String name;
     private String status;
-    private Boolean active;
     private Long dateCreated;
 }

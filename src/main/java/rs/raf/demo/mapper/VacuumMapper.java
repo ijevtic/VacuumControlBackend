@@ -14,7 +14,6 @@ public class VacuumMapper {
     public VacuumDto vacuumToDto(Vacuum vacuum) {
         VacuumDto dto = new VacuumDto();
         dto.setName(vacuum.getName());
-        dto.setActive(vacuum.getActive());
         dto.setStatus(statusToName.get(vacuum.getStatus()));
         dto.setDateCreated(vacuum.getDateCreated());
         
@@ -24,7 +23,7 @@ public class VacuumMapper {
     public Vacuum requestToVacuum(AddVacuumRequest request, User user) {
         Vacuum vacuum = new Vacuum();
         vacuum.setName(request.getName());
-        vacuum.setActive(request.getActive());
+        vacuum.setActive(true);
         vacuum.setStatus(VacuumStatus.STOPPED);
         vacuum.setDateCreated(System.currentTimeMillis() / 1000L);
         vacuum.setLocked(false);

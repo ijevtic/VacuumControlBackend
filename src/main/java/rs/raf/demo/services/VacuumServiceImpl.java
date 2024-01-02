@@ -109,7 +109,9 @@ public class VacuumServiceImpl implements VacuumService {
                 if(vacuum.getLocked()) {
                     return false;
                 }
-                this.vacuumRepository.delete(vacuum);
+                vacuum.setActive(false);
+                this.vacuumRepository.save(vacuum);
+//                this.vacuumRepository.deleteVacuum(vacuum.getName());
 
             } catch (ObjectOptimisticLockingFailureException exception) {
                 System.out.println("Optimistic lock exception REMOVE");
