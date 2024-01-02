@@ -18,10 +18,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
     public Optional<User> findByUserId(Long id);
     @Transactional
     void deleteByUserId(Long id);
-
-
-//    @Modifying
-//    @Query("update User u set u.balance = u.balance + :amount")
-//    @Transactional
-//    public void increaseBalance(@Param("amount") Integer amount);
 }

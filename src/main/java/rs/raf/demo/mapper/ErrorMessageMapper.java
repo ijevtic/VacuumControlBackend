@@ -19,7 +19,7 @@ public class ErrorMessageMapper {
         ErrorMessageDto errorMessageDto = new ErrorMessageDto();
         errorMessageDto.setMessage(errorMessage.getMessage());
         errorMessageDto.setDateCreated(errorMessage.getDateCreated());
-        errorMessageDto.setVacuum(errorMessage.getVacuum());
+        errorMessageDto.setVacuumName(errorMessage.getVacuum().getName());
         return errorMessageDto;
     }
 
@@ -27,7 +27,7 @@ public class ErrorMessageMapper {
         ErrorMessage errorMessage = new ErrorMessage();
         errorMessage.setMessage(errorMessageDto.getMessage());
         errorMessage.setDateCreated(errorMessageDto.getDateCreated());
-        errorMessage.setVacuum(errorMessageDto.getVacuum());
+        errorMessage.setVacuum(this.vacuumRepository.getReferenceByName(errorMessageDto.getVacuumName()).orElse(null));
         return errorMessage;
     }
 

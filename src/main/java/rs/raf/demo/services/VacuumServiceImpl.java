@@ -16,6 +16,7 @@ import rs.raf.demo.repositories.UserRepository;
 import rs.raf.demo.repositories.VacuumRepository;
 import rs.raf.demo.requests.AddVacuumRequest;
 import rs.raf.demo.requests.SearchRequest;
+import rs.raf.demo.responses.VacuumsResponse;
 import rs.raf.demo.utils.JwtUtil;
 import rs.raf.demo.utils.VacuumStatus;
 
@@ -55,7 +56,7 @@ public class VacuumServiceImpl implements VacuumService {
     }
 
     @Override
-    public List<VacuumDto> search(SearchRequest request) {
+    public VacuumsResponse search(SearchRequest request) {
         //get user from context
         String username = getUsernameFromJwt();
         Optional<List<Vacuum>> vs = vacuumRepository.findByUsername(username);
@@ -71,7 +72,7 @@ public class VacuumServiceImpl implements VacuumService {
 
         if(request.getStatus() != null) {
             vacuums = vacuums.stream().filter(vacuum ->
-                    request.getStatus().contains(statusToName.get(vacuum.getStatus()))).toList();
+                    request.getStatus().contains(vacuum.getStatus())).toList();
         }
 
         if(request.getDateTo() != null) {
@@ -82,7 +83,7 @@ public class VacuumServiceImpl implements VacuumService {
             }
         }
 
-        return vacuums;
+        return new VacuumsResponse(vacuums);
     }
 
     @Override

@@ -7,5 +7,5 @@ import rs.raf.demo.model.Vacuum;
 public class ErrorMessageDto {
     private String message;
     private Long dateCreated;
-    private Vacuum vacuum;
+    private String vacuumName;
 }

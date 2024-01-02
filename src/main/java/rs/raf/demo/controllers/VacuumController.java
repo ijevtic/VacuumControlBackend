@@ -13,6 +13,7 @@ import rs.raf.demo.requests.AddUserRequest;
 import rs.raf.demo.requests.AddVacuumRequest;
 import rs.raf.demo.requests.ScheduleRequest;
 import rs.raf.demo.requests.SearchRequest;
+import rs.raf.demo.responses.VacuumsResponse;
 import rs.raf.demo.security.CheckSecurity;
 import rs.raf.demo.services.ErrorMessageService;
 import rs.raf.demo.services.UserService;
@@ -41,13 +42,13 @@ public class VacuumController {
     }
 
     @CheckSecurity(role = SEARCHV)
-    @GetMapping(value= "/search", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<VacuumDto>> search(@RequestBody SearchRequest request) {
-        List<VacuumDto> vacuums = this.vacuumService.search(request);
+    @PostMapping(value= "/search", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<VacuumsResponse> search(@RequestBody SearchRequest request) {
+        VacuumsResponse vacuums = this.vacuumService.search(request);
         if(vacuums == null)
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
-        return new ResponseEntity<>(vacuums, HttpStatus.CREATED);
+        return new ResponseEntity<>(vacuums, HttpStatus.OK);
     }
 
     @CheckSecurity(role = ADDV)
@@ -56,7 +57,7 @@ public class VacuumController {
         if(!this.vacuumService.add(request))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @CheckSecurity(role = REMOVEV)
@@ -74,7 +75,7 @@ public class VacuumController {
         if (!this.vacuumService.dischargeVacuum(vacuumName, false, false)) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
     @CheckSecurity(role = STARTV)
@@ -83,7 +84,7 @@ public class VacuumController {
         if (!this.vacuumService.startVacuum(vacuumName, false)) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
     @CheckSecurity(role = STOPV)
@@ -92,7 +93,7 @@ public class VacuumController {
         if (!this.vacuumService.stopVacuum(vacuumName, false)) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
     @CheckSecurity(role = DISCHARGEV)
