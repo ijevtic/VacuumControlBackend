@@ -106,7 +106,7 @@ public class VacuumServiceImpl implements VacuumService {
         if(vacuumOptional.isPresent()) {
             try {
                 Vacuum vacuum = vacuumOptional.get();
-                if(vacuum.getLocked()) {
+                if(vacuum.getLocked() || vacuum.getStatus() != VacuumStatus.STOPPED) {
                     return false;
                 }
                 vacuum.setActive(false);

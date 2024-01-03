@@ -15,7 +15,7 @@ public class Vacuum {
     @Column(nullable = false)
     private Long vacuumId;
 
-    @Column(unique = true)
+//    @Column(unique = true)
     private String name;
 
     @Enumerated
