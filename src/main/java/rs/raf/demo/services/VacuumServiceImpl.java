@@ -122,7 +122,7 @@ public class VacuumServiceImpl implements VacuumService {
     }
 
     @Override
-    @Transactional
+    //@Transactional
 //    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public boolean dischargeVacuum(String vacuumName, boolean scheduled, boolean chainCall) {
         Vacuum vacuum = vacuumRepository.findByName(vacuumName).orElse(null);
@@ -144,6 +144,7 @@ public class VacuumServiceImpl implements VacuumService {
                     vacuum.setStatus(VacuumStatus.DISCHARGING);
                     
                     vacuumRepository.save(vacuum);
+//                    entityManager.flush();
 
                     Thread.sleep(waitTime);
                     vacuum.setStatus(VacuumStatus.STOPPED);

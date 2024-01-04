@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.TaskScheduler;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.web.bind.annotation.*;
 import rs.raf.demo.dto.UserDto;
@@ -33,12 +34,13 @@ import static rs.raf.demo.utils.Constants.*;
 @CrossOrigin
 public class VacuumController {
     private VacuumService vacuumService;
-    private TaskScheduler taskScheduler;
+    private ThreadPoolTaskScheduler taskScheduler;
 
     @Autowired
-    public VacuumController(VacuumService vacuumService, TaskScheduler taskScheduler) {
+    public VacuumController(VacuumService vacuumService, ThreadPoolTaskScheduler taskScheduler) {
         this.vacuumService = vacuumService;
         this.taskScheduler = taskScheduler;
+        this.taskScheduler.setPoolSize(10);
     }
 
     @CheckSecurity(role = SEARCHV)
